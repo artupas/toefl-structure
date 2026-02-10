@@ -1,12 +1,19 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import fs from 'fs';
 
-const DB_PATH = path.join(process.cwd(), 'data', 'toefl.db');
+// Use /tmp for serverless environments (Vercel), otherwise use project directory
+const DB_DIR = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'data');
+const DB_PATH = path.join(DB_DIR, 'toefl.db');
 
 let db: Database.Database | null = null;
 
 export function getDb(): Database.Database {
   if (!db) {
+    // Ensure directory exists
+    if (!fs.existsSync(DB_DIR)) {
+      fs.mkdirSync(DB_DIR, { recursive: true });
+    }
     db = new Database(DB_PATH);
     db.pragma('journal_mode = WAL');
   }
