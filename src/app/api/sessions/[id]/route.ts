@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDb, initDb } from '@/lib/db';
 
 interface RouteParams {
   params: {
@@ -13,6 +13,8 @@ export async function GET(
 ) {
   try {
     const { id } = params;
+    // Initialize database tables
+    initDb();
     const db = getDb();
     
     // Get session details

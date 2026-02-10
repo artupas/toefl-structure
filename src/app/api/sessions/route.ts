@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDb, initDb } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { userName } = body;
     
+    // Initialize database tables
+    initDb();
     const db = getDb();
     
     // Create a new test session
@@ -31,6 +33,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    // Initialize database tables
+    initDb();
     const db = getDb();
     
     // Get all completed test sessions with their results

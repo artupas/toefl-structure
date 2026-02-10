@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb, Question } from '@/lib/db';
+import { getDb, initDb, Question } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { answers, sessionId, userName } = body;
-    
+
     if (!answers || !Array.isArray(answers)) {
       return NextResponse.json(
         { success: false, error: 'Invalid answers format' },
         { status: 400 }
       );
     }
-    
+
+    // Initialize database tables
+    initDb();
     const db = getDb();
     let correctCount = 0;
     const results = [];
